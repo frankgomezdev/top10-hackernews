@@ -1,4 +1,13 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery, type UseQueryResult } from "@tanstack/react-query";
+interface Story {
+  id: number;
+  by: string;
+  score: number;
+  title: string;
+  url?: string;
+  time: number;
+  type: string;
+}
 
 const TOP_STORIES_URL = "https://hacker-news.firebaseio.com/v0/topstories.json";
 const ITEM_URL = (id: number) =>
@@ -34,7 +43,7 @@ function TopStories() {
 
   const topIds = storiesData?.slice(0, STORY_LIMIT) ?? [];
 
-  const topStoriesQueries = useQueries({
+  const topStoriesQueries = useQueries<UseQueryResult<Story>[]>({
     queries: topIds.map((id: number) => ({
       queryKey: ["story", id],
       queryFn: () => fetchStory(id),
